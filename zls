@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Zls
+ * @package       ZlsPHP
+ * @author        影浅
+ * @email         seekwe@gmail.com
+ * @copyright     Copyright (c) 2015 - 2017, 影浅, Inc.
+ * @link          ---
+ * @since         v1.2.3
+ * @updatetime    2017-3-20 16:22:21
+ */
+
+require __DIR__ . '/public/index.php';

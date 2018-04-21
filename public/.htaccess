@@ -1,0 +1,17 @@
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+AcceptPathInfo On
+RewriteEngine On
+SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+RewriteCond $1 !^(index.php|public|static|robots.txt|favicon.ico)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L,E=PATH_INFO:/$1]
+<ifmodule mod_expires.c>
+<filesmatch ".(jpg|gif|png|css|js)$">
+ExpiresActive on
+ExpiresDefault "access plus 1 year"
+</filesmatch>
+</ifmodule>
