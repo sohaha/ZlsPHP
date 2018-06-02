@@ -1,0 +1,25 @@
+[zls]
+;;;;;;;;;;;;;;;;;;;
+; About zls.ini   ;
+;;;;;;;;;;;;;;;;;;;
+
+[base]
+name = "zls"
+; 调试模式
+debug = true
+
+[mysql]
+; 调试模式
+debug = true
+; 数据库端口
+port = 3306
+; 数据库地址
+hostname =''
+; 数据库用户
+username = ''
+; 数据库密码
+password = ''
+; 数据库名
+database = ''
+; 表前缀
+tablePrefix = ''

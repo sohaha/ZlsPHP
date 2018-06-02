@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+application/storage/*
+application/config/production/*
+application/config/development/*
+database/Backup_ArtisanExport*
+public/admin/
+zls.ini
+!.gitkeep
+!.gitignore
+!.htaccess
+!.nginx
