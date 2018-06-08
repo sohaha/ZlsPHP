@@ -6,16 +6,16 @@
 return
     [
         //默认组,组名=>配置
-        'default_group' => 'mysql',
+        'default_group' => z::config('ini.db.group', true, 'mysql'),
         'mysql'         => [
             'driverType'               => 'mysql',
-            'debug'                    => z::config('ini.mysql.debug'),
+            'debug'                    => z::config('ini.db.debug', true, true),
             'trace'                    => false,
             'pconnect'                 => false,
             'charset'                  => 'utf8',
             'collate'                  => 'utf8_general_ci',
-            'database'                 => z::config('ini.mysql.database'),
-            'tablePrefix'              => z::config('ini.mysql.tablePrefix'),
+            'database'                 => z::config('ini.db.database', true, ''),
+            'tablePrefix'              => z::config('ini.db.tablePrefix', true, ''),
             'tablePrefixSqlIdentifier' => '_tablePrefix_',
             'slowQueryDebug'           => false,//开启慢查询记录
             'slowQueryTime'            => 3000, //慢查询最小时间,单位毫秒，1秒=1000毫秒
@@ -35,10 +35,10 @@ return
             'attribute'                => [],
             'masters'                  => [
                 'master01' => [
-                    'hostname' => z::config('ini.mysql.hostname'),
-                    'port'     => z::config('ini.mysql.port'),
-                    'username' => z::config('ini.mysql.username'),
-                    'password' => z::config('ini.mysql.password'),
+                    'hostname' => z::config('ini.db.hostname', true, ''),
+                    'port'     => z::config('ini.db.port', true, 3306),
+                    'username' => z::config('ini.db.username', true, ''),
+                    'password' => z::config('ini.db.password', true, ''),
                 ],
             ],
             'slaves'                   => [
@@ -86,9 +86,9 @@ return
             'driverType'               => 'sqlite',
             'debug'                    => true,
             'pconnect'                 => false,
-            'tablePrefix'              => '',
+            'tablePrefix'              => z::config('ini.db.tablePrefix', true, ''),
             'tablePrefixSqlIdentifier' => '_tablePrefix_',
-            'database'                 => 'test.sqlite3', //sqlite3数据库路径
+            'database'                 => z::config('ini.db.database', true, ''), //sqlite3数据库路径
             'slowQueryDebug'           => true,//是否开启慢查询记录
             'slowQueryTime'            => 3000, //单位毫秒，1秒=1000毫秒
             'slowQueryHandle'          => new \Zls_Database_SlowQuery_Handle_Default(),
@@ -97,10 +97,10 @@ return
         'my_db'         => [
             'driverType'  => function () {
                 $dbms = 'mysql';
-                $host = z::config('ini.mysql.hostname');
-                $dbName = z::config('ini.mysql.database');
-                $user = z::config('ini.mysql.username');
-                $pass = z::config('ini.mysql.password');
+                $host = z::config('ini.db.hostname', true, '');
+                $dbName = z::config('ini.db.database', true, '');
+                $user = z::config('ini.db.username', true, '');
+                $pass = z::config('ini.db.password', true, '');
                 $dsn = "{$dbms}:host={$host};dbname={$dbName}";
                 return new PDO($dsn, $user, $pass);
             },
@@ -109,6 +109,6 @@ return
                 return $sql;
             },
             'debug'       => true,
-            'tablePrefix' => z::config('ini.mysql.tablePrefix'),
+            'tablePrefix' => z::config('ini.db.tablePrefix', true, ''),
         ],
     ];

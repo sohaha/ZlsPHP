@@ -16,11 +16,11 @@
     ],
     "require": {
         "php"        : ">=5.4.0",
-         "zls/cache" : "^1.0.0",
-         "zls/logger": "^1.0.0",
-         "zls/session": "^1.0.0",
-         "zls/command": "^1.0.0",
-         "zls/action": "^1.0.0"
+         "zls/cache" : ">=1.0.0",
+         "zls/logger": ">=1.0.0",
+         "zls/session": ">=1.0.0",
+         "zls/command": ">=1.0.0",
+         "zls/action": ">=1.0.0"
     }
 }
                 
