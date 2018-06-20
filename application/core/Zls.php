@@ -7,7 +7,7 @@
  * @copyright     Copyright (c) 2015 - 2017, 影浅, Inc.
  * @link          https://docs.73zls.com/zls-php/#/
  * @since         v2.1.19
- * @updatetime    2018-6-4 16:15:09
+ * @updatetime    2018-6-20 17:16:37
  */
 defined('IN_ZLS') || define("IN_ZLS", '2.1.19');
 defined('ZLS_PATH') || define('ZLS_PATH', __DIR__ . '/');
@@ -15,6 +15,7 @@ defined('ZLS_RUN_MODE_PLUGIN') || define('ZLS_RUN_MODE_PLUGIN', true);
 defined('ZLS_APP_PATH') || define('ZLS_APP_PATH', Z::realPath(ZLS_PATH . 'application', true));
 defined('ZLS_INDEX_NAME') || define('ZLS_INDEX_NAME', pathinfo(__FILE__, PATHINFO_BASENAME));
 defined('ZLS_PACKAGES_PATH') || define('ZLS_PACKAGES_PATH', ZLS_APP_PATH . 'packages/');
+define('ZLS_FRAMEWORK', __FILE__);
 interface Zls_Logger
 {
     public function write(\Zls_Exception $exception);
@@ -156,7 +157,7 @@ class Z
      * @param null $default
      * @return mixed|null|Zls_Config|array
      */
-    public static function &config($configName = null, $caching = true, $default=null)
+    public static function &config($configName = null, $caching = true, $default = null)
     {
         if (empty($configName)) {
             return Zls::getConfig();
@@ -334,7 +335,7 @@ class Z
     public static function trace($instance = false)
     {
         if (self::config()->getTraceStatus()) {
-            $_trace = self::log();
+            $_trace = self::log(null, false);
             if ($instance === true) {
                 return $_trace;
             }
@@ -366,7 +367,7 @@ class Z
             return false;
         }
         $trace = new \Zls_Trace();
-        if (!!$log) {
+        if (!!$type) {
             if ($debug) {
                 $debug = self::debug(null, false, true);
                 $current = self::arrayGet(debug_backtrace(), 0, ['file' => '', 'line' => '']);
@@ -473,11 +474,11 @@ class Z
     }
     /**
      * 数组过滤
-     * @param          $arr
+     * @param array $arr
      * @param callable $callback
      * @return array
      */
-    public static function arrayFilter($arr, callable $callback)
+    public static function arrayFilter(array $arr, callable $callback)
     {
         if (self::phpCanV('5.6.0')) {
             return array_filter($arr, $callback, ARRAY_FILTER_USE_BOTH);
@@ -511,9 +512,11 @@ class Z
         if ($config->getCacheConfig()) {
             self::cache()->reset();
         }
-        if ($config->getDatabaseConfig()) {
-            self::db()->close();
-        }
+        self::clearDbInstances();
+        //        $db->close();
+        //    },self::$dbInstances);
+        //    //self::db()->close();
+        //}
         self::di()->remove();
         \Zls_Logger_Dispatcher::setMemReverse();
     }
@@ -526,36 +529,16 @@ class Z
     {
         return self::config()->getCacheHandle($cacheType);
     }
-    /**
-     * 获取数据库操作对象
-     * @staticvar array $instances   数据库单例容器
-     * @param string|array $group         配置组名称
-     * @param boolean      $isNewInstance 是否刷新单例
-     * @return \Zls_Database_ActiveRecord
-     */
-    public static function &db($group = '', $isNewInstance = false)
+    public static function clearDbInstances($key = null)
     {
-        if (is_array($group)) {
-            $groupString = json_encode($group);
-            $key = md5($groupString);
-            if (!self::arrayKeyExists($key, self::$dbInstances) || $isNewInstance) {
-                $group['group'] = $groupString;
-                self::$dbInstances[$key] = new \Zls_Database_ActiveRecord($group);
-            }
-            return self::$dbInstances[$key];
+        if (!is_null($key)) {
+            self::$dbInstances[$key]->close();
+            unset(self::$dbInstances[$key]);
         } else {
-            $config = self::config()->getDatabaseConfig();
-            Z::throwIf(empty($config), 'Database', 'database configuration is empty , did you forget to use "->setDatabaseConfig()" in index.php ?');
-            if (empty($group)) {
-                $group = $config['default_group'];
-            }
-            if (!self::arrayKeyExists($group, self::$dbInstances) || $isNewInstance) {
-                $config = self::config()->getDatabaseConfig($group);
-                Z::throwIf(empty($config), 'Database', 'unknown database config group [ ' . $group . ' ]');
-                $config['group'] = $group;
-                self::$dbInstances[$group] = new \Zls_Database_ActiveRecord($config);
-            }
-            return self::$dbInstances[$group];
+            array_map(function (\Zls_Database_ActiveRecord $db) {
+                $db->close();
+            }, self::$dbInstances);
+            self::$dbInstances = [];
         }
     }
     /**
@@ -984,14 +967,6 @@ class Z
                         $pname = substr($p, 1);
                         if ($pname) {
                             $value = true;
-                            if ($pname{0} == '-') {
-                                $pname = substr($pname, 1);
-                                if (strpos($p, '=') !== false) {
-                                    $_tmp = explode('=', substr($p, 2), 2);
-                                    $pname = $_tmp[0];
-                                    $value = $_tmp[1];
-                                }
-                            }
                             $nextparm = z::arrayGet($params, $k + 1);
                             if ($value === true && $nextparm !== null && !(!!$nextparm && is_string($nextparm) && $nextparm{0} == '-')) {
                                 $value = $nextparm;
@@ -1106,8 +1081,9 @@ class Z
      */
     public static function session($key = null, $default = null, $xssClean = false)
     {
-        self::sessionStart();
-        $session = (self::isSwoole(true) && ($sessionHandle = self::config()->getSessionHandle())) ? $sessionHandle->swooleGet(null) : $_SESSION;
+        $id = self::sessionStart();
+        $session = (self::isSwoole(true) && ($sessionHandle = self::config()->getSessionHandle())) ? $sessionHandle->swooleRead($id) : $_SESSION;
+        //$session = (self::isSwoole(true) && ($sessionHandle = self::config()->getSessionHandle())) ? $sessionHandle->swooleGet(null) : $_SESSION;
         $value = is_null($key) ? (empty($session) ? [] : $session) : self::arrayGet($session, $key, $default);
         return $xssClean ? self::xssClean($value) : $value;
     }
@@ -1119,7 +1095,7 @@ class Z
     public static function sessionStart($id = null)
     {
         if (!self::di()->has('ZlsSessionID')) {
-            $sessionID = '';
+            $sessionId = '';
             if (!self::isCli()) {
                 if (self::phpCanV()) {
                     $started = session_status() === PHP_SESSION_ACTIVE ? true : false;
@@ -1130,27 +1106,27 @@ class Z
                     if (!is_null($id)) {
                         session_id($id);
                     }
-                    @session_start();
+                    session_start();
                 }
-                $sessionID = session_id();
+                $sessionId = session_id();
             } elseif (self::isSwoole(true)) {
                 $sessionConfig = self::config()->getSessionConfig();
                 $sessionName = $sessionConfig['session_name'];
-                $sessionID = $id ?: z::cookieRaw($sessionName);
-                if (!$sessionID) {
-                    $sessionID = md5(password_hash(time() . mt_rand(100000, 999999), 1));
-                    z::setCookieRaw($sessionName, $sessionID, time() + $sessionConfig['lifetime'], '/');
+                $sessionId = $id ?: z::cookieRaw($sessionName);
+                if (!$sessionId) {
+                    $sessionId = md5(uniqid(z::clientIp(), true)) . mt_rand(1000, 9999);
+                    z::setCookieRaw($sessionName, $sessionId, time() + $sessionConfig['lifetime'], '/');
                 }
                 $sessionHandle = self::config()->getSessionHandle();
                 self::throwIf(!$sessionHandle, 500, 'swoole mode must set the SessionHandle');
-                $sessionHandle->swooleInit($sessionID);
+                $sessionHandle->swooleInit($sessionId);
             }
-            if ($sessionID) {
-                self::di()->bind('ZlsSessionID', function () use ($sessionID) {
-                    return $sessionID;
+            if ($sessionId) {
+                self::di()->bind('ZlsSessionID', function () use ($sessionId) {
+                    return $sessionId;
                 });
             }
-            return $sessionID;
+            return $sessionId;
         } else {
             return self::di()->makeShared('ZlsSessionID');
         }
@@ -1159,6 +1135,53 @@ class Z
     {
         $value = is_null($key) ? $_COOKIE : self::arrayGet($_COOKIE, $key, $default);
         return $xssClean ? self::xssClean($value) : $value;
+    }
+    /**
+     * 获取客户端IP
+     * @param array $source
+     * @param array $check
+     * @return bool|mixed|string
+     */
+    public static function clientIp($check = null, $source = null)
+    {
+        $clientIpConditions = self::config()->getClientIpConditions();
+        if (is_null($check)) {
+            $check = $clientIpConditions['check'];
+        }
+        if (is_null($source)) {
+            $source = $clientIpConditions['source'];
+        }
+        array_walk($source, function (&$v) {
+            $v = strtoupper($v);
+        });
+        array_walk($check, function (&$v) {
+            $v = strtoupper($v);
+        });
+        $checkClientIp = function ($ip) {
+            if (empty($ip)) {
+                return false;
+            }
+            $whitelist = self::config()->getBackendServerIpWhitelist();
+            foreach ($whitelist as $okayIp) {
+                if ($okayIp == $ip) {
+                    return $ip;
+                }
+            }
+            return false;
+        };
+        foreach ($source as $v) {
+            if ($ip = self::server($v)) {
+                if (!in_array($v, $check)) {
+                    return $ip;
+                }
+                if ($ip = $checkClientIp($v)) {
+                    return $ip;
+                } else {
+                    continue;
+                }
+            }
+        }
+        return "Unknown";
     }
     public static function setCookieRaw($key, $value, $life = null, $path = '/', $domian = null, $httpOnly = false)
     {
@@ -1216,14 +1239,14 @@ class Z
      */
     public static function sessionSet($key = null, $value = null)
     {
-        self::sessionStart();
+        $id = self::sessionStart();
         if (is_array($key)) {
             $_SESSION = array_merge($_SESSION, $key);
         } else {
             self::arraySet($_SESSION, $key, $value);
         }
         if (self::isSwoole(true) && ($sessionHandle = self::config()->getSessionHandle())) {
-            $sessionHandle->swooleSet($key, $value);
+            $sessionHandle->swooleWrite($id, $_SESSION);
         }
     }
     /**
@@ -1262,14 +1285,14 @@ class Z
      */
     public static function sessionUnset($key = null)
     {
-        self::sessionStart();
+        $id = self::sessionStart();
         if (is_null($key)) {
             session_unset();
         } else {
             self::arraySet($_SESSION, $key, null);
         }
         if (self::isSwoole(true) && ($sessionHandle = self::config()->getSessionHandle())) {
-            $sessionHandle->swooleUnset($key, null);
+            $sessionHandle->swooleDestroy($id);
         }
     }
     /**
@@ -1366,61 +1389,6 @@ class Z
     public static function arrayMap($arr, Closure $closure, $keepKey = true)
     {
         return $keepKey ? array_map($closure, $arr) : array_map($closure, $arr, array_keys($arr));
-    }
-    /**
-     * 获取客户端IP
-     * @param array $source
-     * @param array $check
-     * @return bool|mixed|string
-     */
-    public static function clientIp($check = null, $source = null)
-    {
-        $clientIpConditions = self::config()->getClientIpConditions();
-        if (is_null($check)) {
-            $check = $clientIpConditions['check'];
-        }
-        if (is_null($source)) {
-            $source = $clientIpConditions['source'];
-        }
-        array_walk($source, function (&$v) {
-            $v = strtoupper($v);
-        });
-        array_walk($check, function (&$v) {
-            $v = strtoupper($v);
-        });
-        $checkClientIp = function ($ip) {
-            if (empty($ip)) {
-                return false;
-            }
-            $whitelist = self::config()->getBackendServerIpWhitelist();
-            foreach ($whitelist as $okayIp) {
-                if ($okayIp == $ip) {
-                    return $ip;
-                }
-            }
-            return false;
-        };
-        foreach ($source as $v) {
-            if ($ip = self::server($v)) {
-                if (!in_array($v, $check)) {
-                    return $ip;
-                }
-                if ($ip = $checkClientIp($v)) {
-                    return $ip;
-                } else {
-                    continue;
-                }
-            }
-        }
-        return "Unknown";
-    }
-    public static function clearDbInstances($key = null)
-    {
-        if (!is_null($key)) {
-            unset(self::$dbInstances[$key]);
-        } else {
-            self::$dbInstances = [];
-        }
     }
     public static function createSqlite3Database($path)
     {
@@ -1692,6 +1660,38 @@ class Z
     {
         return self::factory('Zls_' . $className, $shared, null, $args);
     }
+    /**
+     * 获取数据库操作对象
+     * @staticvar array $instances   数据库单例容器
+     * @param string|array $group         配置组名称
+     * @param boolean      $isNewInstance 是否刷新单例
+     * @return \Zls_Database_ActiveRecord
+     */
+    public static function &db($group = '', $isNewInstance = false)
+    {
+        if (is_array($group)) {
+            $groupString = json_encode($group);
+            $key = md5($groupString);
+            if (!self::arrayKeyExists($key, self::$dbInstances) || $isNewInstance) {
+                $group['group'] = $groupString;
+                self::$dbInstances[$key] = new \Zls_Database_ActiveRecord($group);
+            }
+        } else {
+            $config = self::config()->getDatabaseConfig();
+            Z::throwIf(empty($config), 'Database', 'database configuration is empty , did you forget to use "->setDatabaseConfig()" in index.php ?');
+            if (empty($group)) {
+                $group = $config['default_group'];
+            }
+            $key = $group;
+            if (!self::arrayKeyExists($group, self::$dbInstances) || $isNewInstance) {
+                $config = self::config()->getDatabaseConfig($group);
+                Z::throwIf(empty($config), 'Database', 'unknown database config group [ ' . $group . ' ]');
+                $config['group'] = $group;
+                self::$dbInstances[$key] = new \Zls_Database_ActiveRecord($config);
+            }
+        }
+        return self::$dbInstances[$key];
+    }
     public static function getPost($key = null, $default = null, $xssClean = true)
     {
         if (is_null($key)) {
@@ -1847,22 +1847,13 @@ class Z
         if (!$str) {
             return '';
         }
-        if (version_compare(PHP_VERSION, '7.0.0', 'ge')) {
-            $iv = $key = substr(md5(self::getEncryptKey($key, $attachKey)), 0, 16);
-            $blockSize = 16;
-            $msgLength = strlen($str);
-            if ($msgLength % $blockSize != 0) {
-                $str .= str_repeat("\0", $blockSize - ($msgLength % $blockSize));
-            }
-            return bin2hex(openssl_encrypt($str, 'AES-128-CBC', $key, OPENSSL_NO_PADDING, $iv));
-        } else {
-            $str = $str . '';
-            $key = substr(md5(self::getEncryptKey($key, $attachKey)), 0, 8);
-            $block = mcrypt_get_block_size('des', 'ecb');
-            $pad = $block - (strlen($str) % $block);
-            $str .= str_repeat(chr($pad), $pad);
-            return bin2hex(mcrypt_encrypt(MCRYPT_DES, $key, $str, MCRYPT_MODE_ECB));
+        $iv = $key = substr(md5(self::getEncryptKey($key, $attachKey)), 0, 16);
+        $blockSize = 16;
+        $msgLength = strlen($str);
+        if ($msgLength % $blockSize != 0) {
+            $str .= str_repeat("\0", $blockSize - ($msgLength % $blockSize));
         }
+        return bin2hex(openssl_encrypt($str, 'AES-128-CBC', $key, OPENSSL_NO_PADDING, $iv));
     }
     /**
      * @param $key
@@ -1887,20 +1878,8 @@ class Z
         if (!$str) {
             return '';
         }
-        if (version_compare(PHP_VERSION, '7.0.0', 'ge')) {
-            $iv = $key = substr(md5(self::getEncryptKey($key, $attachKey)), 0, 16);
-            return trim(@openssl_decrypt(hex2bin($str), 'AES-128-CBC', $key, OPENSSL_NO_PADDING, $iv), "\0") ?: false;
-        } else {
-            $str = $str . '';
-            $key = substr(md5(self::getEncryptKey($key, $attachKey)), 0, 8);
-            $str = @pack("H*", $str);
-            if (!$str) {
-                return '';
-            }
-            $str = @mcrypt_decrypt(MCRYPT_DES, $key, $str, MCRYPT_MODE_ECB);
-            $pad = ord($str[($len = strlen($str)) - 1]);
-            return substr($str, 0, strlen($str) - $pad) ?: false;
-        }
+        $iv = $key = substr(md5(self::getEncryptKey($key, $attachKey)), 0, 16);
+        return trim(@openssl_decrypt(hex2bin($str), 'AES-128-CBC', $key, OPENSSL_NO_PADDING, $iv), "\0") ?: false;
     }
     /**
      * @param $class
@@ -2354,10 +2333,10 @@ class Zls_Command
     private $executes;
     public function __construct($args)
     {
-        $first = z::arrayGet($args, 1);
-        if ($first==='artisan') {
+        if (z::arrayGet($args, 1) === 'artisan') {
             $args = array_values(array_diff($args, ['artisan']));
         }
+        $first = z::arrayGet($args, 1);
         $config = Z::config();
         $taskObject = '';
         $commandMain = '\Zls\Command\Main';
@@ -2365,7 +2344,7 @@ class Zls_Command
             Z::finish('Warning: command not installed, Please install "composer require zls/command"' . PHP_EOL);
         }
         $defaultCmd = 'Main';
-        $argsCommandName = $first?:$defaultCmd;
+        $argsCommandName = $first ?: $defaultCmd;
         $name = ucfirst($argsCommandName);
         $command = explode(':', $name);
         $name = array_shift($command);
@@ -2373,7 +2352,7 @@ class Zls_Command
         $commandLists = $config->getCommands();
         if ($name === $defaultCmd) {
             $commandName = $commandMain;
-        } elseif(Z::arrayKeyExists($argsCommandName, $commandLists)) {
+        } elseif (Z::arrayKeyExists($argsCommandName, $commandLists)) {
             $commandName = $commandLists[$argsCommandName];
         } else {
             $commandName = 'Command_' . $name;
@@ -2393,7 +2372,7 @@ class Zls_Command
             }
         }
         $this->command = $taskObject;
-        if (Z::arrayGet($args, ['h', 'help'])&&$commandName!==$commandMain) {
+        if (Z::arrayGet($args, ['h', 'H', '-help']) && $commandName !== $commandMain) {
             $executes = ['help'];
         }
         foreach ($executes as $execute) {
@@ -4504,14 +4483,14 @@ abstract class Zls_Database
     public function trace()
     {
         if (!!$this->_traceRes) {
-            Z::log()->mysql($this->_traceRes, $this->getDriverType());
+            Z::log(null, false)->mysql($this->_traceRes, $this->getDriverType());
         }
     }
 }
 /**
  * Class Zls_Controller
- * @--method before($method, $controllerShort,$controller,$args) before($method, $controllerShort,$controller,$args)
- * @--method after($method, $args, $contents) after($method, $args, $contents)
+ * @method before($method, $controllerShort, $controller, $args) before($method, $controllerShort, $controller, $args)
+ * @method after($method, $args, $contents) after($method, $args, $contents)
  */
 abstract class Zls_Controller
 {
@@ -4558,7 +4537,7 @@ abstract class Zls_Task
     {
         if ($this->debug || $this->debugError) {
             $nowTime = '' . Z::microtime();
-            echo($time ? date('[Y-m-d H:i:s.' . substr(
+            echo ($time ? date('[Y-m-d H:i:s.' . substr(
                             $nowTime,
                             strlen($nowTime) - 3
                         ) . ']') . ' [PID:' . sprintf(
@@ -4871,7 +4850,7 @@ abstract class Zls_Exception extends \Exception
     public function setHttpHeader()
     {
         if (!Z::isCli()) {
-            header($this->httpStatusLine);
+            Z::header($this->httpStatusLine);
         }
         return $this;
     }
@@ -5021,7 +5000,7 @@ abstract class Zls_Exception extends \Exception
         return $this->getTraceString(true);
     }
 }
-abstract class Zls_Session
+abstract class Zls_Session implements \SessionHandlerInterface
 {
     protected $config;
     /**
@@ -5036,11 +5015,17 @@ abstract class Zls_Session
             $this->config = Z::config($configFileName);
         }
     }
-    abstract public function init($sessionID);
-    abstract public function swooleInit($sessionID);
-    abstract public function swooleGet($key);
-    abstract public function swooleUnset($key);
-    abstract public function swooleSet($key, $value);
+    abstract public function init();
+    abstract public function swooleInit($sessionId);
+    abstract public function swooleWrite($sessionId, $sessionData);
+    abstract public function swooleRead($sessionId);
+    abstract public function swooleDestroy($sessionId);
+    abstract public function swooleGc($maxlifetime);
+    //
+    //
+    //
+    //
+    //
 }
 class Zls_Exception_404 extends Zls_Exception
 {
@@ -5453,6 +5438,7 @@ class Zls_SeparationRouter extends Zls_Route
  * @method self setOutputJsonRender($e)
  * @method self setLogsSubDirNameFormat($e)
  * @method self setCommands($e)
+ * @method self setHmvcDirName($e)
  * @method string getBeanDirName()
  * @method string getExceptionLevel()
  * @method string getApplicationDir()
@@ -5461,7 +5447,7 @@ class Zls_SeparationRouter extends Zls_Route
  * @method string getCookiePrefix()
  * @method string getCacheConfig()
  * @method array getHmvcModules()
- * @method string getSessionHandle()
+ * @method \Zls_Session getSessionHandle()
  * @method string getTaskDirName()
  * @method string getPrimaryApplicationDir()
  * @method string getMethodPrefix()
@@ -5475,6 +5461,7 @@ class Zls_SeparationRouter extends Zls_Route
  * @method string getDefaultMethod()
  * @method string getLibraryDirName()
  * @method string getMethodUriSubfix()
+ * @method string getConfigDirName()
  * @method array getMethodCacheConfig()
  * @method boolean getExceptionControl()
  * @method \Zls_Maintain_Handle_Default getMaintainModeHandle()
@@ -5597,7 +5584,7 @@ class Zls_Config
                 return $fileDefaultPath;
             }
         }
-        return "";
+        return '';
     }
     public function getPackages()
     {
@@ -5699,7 +5686,7 @@ class Zls_Config
         } elseif (!empty($this->encryptKey['default'])) {
             return $this->encryptKey['default'];
         }
-        return '';
+        return '73zls';
     }
     public function setEncryptKey($encryptKey)
     {
@@ -6204,8 +6191,8 @@ class Zls_Logger_Dispatcher
         foreach ($loggerWriters as $loggerWriter) {
             $loggerWriter->write($exception);
         }
-        if ($config->getShowError()) {
-            $handle = $config->getExceptionHandle();
+        $handle = $config->getExceptionHandle();
+        if ($config->getShowError() || $handle) {
             if ($handle instanceof \Zls_Exception_Handle) {
                 $error = $handle->handle($exception);
             } else {
@@ -6495,7 +6482,7 @@ class Zls_Trace
             return $_content;
         };
         $debug = $fn($debug);
-        $prefix = str_repeat('=', 50);
+        $prefix = str_repeat('=', 25) . (new \DateTime())->format('Y-m-d H:i:s u') . str_repeat('=', 25);
         if (is_bool($content)) {
             $content = var_export($content, true);
         } elseif (!is_string($content)) {
