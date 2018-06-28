@@ -28,7 +28,7 @@ composer create-project --prefer-dist zls/zls xxx #xxx表示项目名
 在根目录执行 
 
 ```bash
-php zls artisan start
+php zls start
 ```
 
 > 如果想非本机请访问请加上 `-host 0.0.0.0` ，默认端口是 `3780` 如要修改成8080 `-port 8080`。
@@ -38,12 +38,22 @@ php zls artisan start
 ## 更多指令说明
 
 ```bash
-php zls artisan -h
+php zls -h
 ```
 
-### 注意
+## Git 规范
+
+```bash
+git config core.hooksPath .githook
+git config core.autocrlf input
+git config core.safecrlf warn
+```
+
+## 注意
 
 请给 application/storage 目录可写入权限
 
 
-2018-06-08 16:23:27
+2018-06-28 13:29:36
+
+2018-06-28 13:33:58

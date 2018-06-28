@@ -44,17 +44,17 @@ return new \Zls\Session\Redis(['path' => 'tcp://127.0.0.1:6379?timeout=3&persist
  * Mongodb托管
  */
 /*return new \Zls\Session\Mongodb([
-		'host'         => '127.0.0.1', //mongodb主机地址
-		'port'         => 27017, //端口
-		'user'         => 'root',
-		'password'     => '',
-		'database'     => 'local', //   MongoDB 数据库名称
-		'collection'   => 'sessions', //   MongoDB collection名称
-		'persistent'   => false, // 是否持久连接
-		'persistentId' => 'ZlsMongoSession', // 持久连接id
-		// 是否支持 replicaSet
-		'replicaSet'   => false,
-	]
+        'host'         => '127.0.0.1', //mongodb主机地址
+        'port'         => 27017, //端口
+        'user'         => 'root',
+        'password'     => '',
+        'database'     => 'local', //   MongoDB 数据库名称
+        'collection'   => 'sessions', //   MongoDB collection名称
+        'persistent'   => false, // 是否持久连接
+        'persistentId' => 'ZlsMongoSession', // 持久连接id
+        // 是否支持 replicaSet
+        'replicaSet'   => false,
+    ]
 );*/
 /**
  * MySQL托管
@@ -69,19 +69,19 @@ return new \Zls\Session\Redis(['path' => 'tcp://127.0.0.1:6379?timeout=3&persist
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 /*return new \Zls\Session\Mysql([
-		//如果使用数据库配置里面的组信息，这里可以设置group组名称，没有就留空
-		//设置group组名称后，下面连接的配置不再起作用，group优先级大于下面的连接信息
-		'group'        => '',
-		//表全名，不包含前缀
-		'table'        => 'session_handler_table',
-		//表前缀，如果有使用数据库配置组里面的信息
-		//这里可以设置相同的数据库配置组里面的前缀才能正常工作
-		'table_prefix' => '',
-		//连接信息
-		'hostname'     => '127.0.0.1',
-		'port'         => 3306,
-		'username'     => 'root',
-		'password'     => 'admin',
-		'database'     => 'test',
-	]
+        //如果使用数据库配置里面的组信息，这里可以设置group组名称，没有就留空
+        //设置group组名称后，下面连接的配置不再起作用，group优先级大于下面的连接信息
+        'group'        => '',
+        //表全名，不包含前缀
+        'table'        => 'session_handler_table',
+        //表前缀，如果有使用数据库配置组里面的信息
+        //这里可以设置相同的数据库配置组里面的前缀才能正常工作
+        'table_prefix' => '',
+        //连接信息
+        'hostname'     => '127.0.0.1',
+        'port'         => 3306,
+        'username'     => 'root',
+        'password'     => 'admin',
+        'database'     => 'test',
+    ]
 );*/

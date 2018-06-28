@@ -10,7 +10,7 @@ use Z;
  * @since         v0.0.1
  * @updatetime    2017-05-30 21:32
  */
-class Zls extends ZlsApi
+class Index extends \Zls_Controller
 {
     public function before($method, $controllerShort, $args, $controller)
     {
@@ -22,9 +22,9 @@ class Zls extends ZlsApi
     public function z_index()
     {
         z::debug('index');
-        //\sleep(1);
-        return z::json(200, __CLASS__, [
-            '运行成功',
+        $data = new \DateTime();
+        return z::json(200, 'Index', [
+            $data->format('Y-m-d H:i:s u'),
             z::clientIp(),
             z::host(true, true, true),
             z::debug('index', true, true),

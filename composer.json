@@ -20,7 +20,8 @@
          "zls/logger": ">=1.0.0",
          "zls/session": ">=1.0.0",
          "zls/command": ">=1.0.0",
-         "zls/action": ">=1.0.0"
+         "zls/action": ">=1.0.0",
+         "zls/framework": ">=1.0.0"
     }
 }
                 

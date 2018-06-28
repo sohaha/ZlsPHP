@@ -8,13 +8,13 @@
  * 注册的关联数组中的键名称，比如这里键demo的值hmvcModuleName是Demo，对应的hvmc模块就是上面注册的Demo模块。
  */
 return [
-	'enable'  => true, //总开关，是否启用
-	'domains' => [
-		'demo' => [
-			'hmvcModuleName' => 'demo', //hvmc模块名称
-			'enable'         => true, //单个开关，是否启用
-			'domainOnly'     => false, //是否只能通过绑定的域名访问
-			'isFullDomain'   => false//绑定完整的域名设置为true；绑定子域名设置为false
-		],
-	],
+    'enable'  => true, //总开关，是否启用
+    'domains' => [
+        'demo' => [
+            'hmvcModuleName' => 'demo', //hvmc模块名称
+            'enable'         => true, //单个开关，是否启用
+            'domainOnly'     => false, //是否只能通过绑定的域名访问
+            'isFullDomain'   => false//绑定完整的域名设置为true；绑定子域名设置为false
+        ],
+    ],
 ];

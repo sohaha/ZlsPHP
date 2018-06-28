@@ -14,9 +14,6 @@ use Z;
  */
 class ZlsApi extends \Zls_Controller
 {
-    public function z_t() {
-        var_dump( static::z_index());
-    }
     /**
      * 入口
      * @time   2017-05-30 21:32
@@ -28,7 +25,7 @@ class ZlsApi extends \Zls_Controller
     public function z_index()
     {
         z::debug('index');
-        return z::json(200, __CLASS__, [
+        return z::json(200, 'ok', [
             z::getPost('say', '运行成功Api'),
            'clientIp'=> z::clientIp(),
             z::host(true, true, true),

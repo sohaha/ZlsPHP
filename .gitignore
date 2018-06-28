@@ -1,9 +1,10 @@
 .idea/
 .vscode/
+vendor/
 application/storage/*
 application/config/production/*
 application/config/development/*
-database/Backup_ArtisanExport*
+database/mysql/Backup_Command*
 public/admin/
 zls.ini
 !.gitkeep

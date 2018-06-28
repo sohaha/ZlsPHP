@@ -1,0 +1,37 @@
+#!/bin/bash
+# author
+# Treri <https://github.com/Treri>
+
+msg=$(head -n 1 $1)
+
+if echo $msg | grep -iqE "^Merge "; then
+  exit 0
+fi;
+
+if echo $msg | grep -iqE "^Revert "; then
+  exit 0
+fi;
+
+if echo $msg | grep -iqE "^(feat|fix|docs|style|refactor|perf|test|chore)(\([^()]{1,}\)){0,1}: .{1,}"; then
+  exit 0
+fi;
+
+echo
+echo -e "\033[41mINVALID COMMIT MSG:\033[0m Does not match \"<type>(<scope>): <subject>\" !"
+echo
+cat <<EOF
+:zap:Available types and what it mean are list here
+
+  feat:     新功能
+  fix:      BUG修复
+  docs:     项目文档更改
+  style:    代码风格修正，不影响代码功能（空格，格式化，缺少分号等）
+  refactor: 重构，代码更改既不修复错误也不添加功能
+  perf:     提升代码性能
+  test:     添加代码测试
+  chore:    构建过程或辅助工具和库（如文档生成）的更改
+
+EOF
+echo
+
+exit 1

@@ -18,7 +18,7 @@ define('ZLS_APP_PATH', ZLS_PATH . '../application/');
 //入口文件名称
 define('ZLS_INDEX_NAME', pathinfo(__FILE__, PATHINFO_BASENAME));
 //引入核心
-require __DIR__ . '/../application/core/Zls.php';
+require __DIR__ . '/../vendor/autoload.php';
 Zls::initialize()
     //设置缓存目录,请保证有写入权限
     //->setStorageDirPath(ZLS_APP_PATH . 'storage/')
@@ -44,19 +44,19 @@ Zls::initialize()
     //注册路由器
     //->addRouter()
     //默认控制器
-    ->setDefaultController('Zls')
+    //->setDefaultController('Zls')
     //注册hmvc模块
-    ->setHmvcModules(Z::config('hmvc'))
+    //->setHmvcModules(Z::config('hmvc'))
     //设置别名
     //->setAlias([ 'Http' => \Zls\Action\Http::class, ])
     //设置缓存
-    //->setCacheConfig('cache')
+    ->setCacheConfig('cache')
     //设置数据库连接信息
     ->setDatabaseConfig('database')
     //设置自定义的错误显示控制处理类
     //->setExceptionHandle(new \Exception\Wx())
     //错误日志记录，注释掉这行会关闭日志记录，去掉注释则开启日志文件记录,第一个参数是日志文件路径，第二个参数为是否记录404类型异常
-    ->addLoggerWriter(new \Zls\Logger\FileWriter(ZLS_APP_PATH . 'storage/logs/', false, true))
+    //->addLoggerWriter(new \Zls\Logger\FileWriter(ZLS_APP_PATH . 'storage/logs/', false, true))
     //设置日志记录子目录格式，参数就是date()函数的第一个参数,默认是 Y-m-d/H */
     //->setLogsSubDirNameFormat('Y-m-d/H')
     //设置session信息
