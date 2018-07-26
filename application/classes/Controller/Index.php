@@ -21,14 +21,21 @@ class Index extends \Zls_Controller
     }
     public function z_index()
     {
-        z::debug('index');
+        z::debug('part');
         $data = new \DateTime();
-        return z::json(200, 'Index', [
-            $data->format('Y-m-d H:i:s u'),
-            z::clientIp(),
-            z::host(true, true, true),
-            z::debug('index', true, true),
-            z::debug(),
-        ]);
+        return [
+            'time'     => $data->format('Y-m-d H:i:s u'),
+            'clientIp' => z::clientIp(),
+            'host'     => z::host(true, true, true),
+            'part'     => z::debug('part', true, true, true),
+            'global'   => z::debug(),
+        ];
+    }
+    public function zpi()
+    {
+    }
+    public function call()
+    {
+        return z::json(404);
     }
 }

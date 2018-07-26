@@ -2,7 +2,8 @@
 /**
  * ini入口配置
  */
-$iniFile = z::realPath('../zls.ini');
+$origin = getcwd() . '/';
+$iniFile = $origin . 'zls.ini';
 if (!file_exists($iniFile)) {
     $exampleIniFile = z::realPath('../zls.ini.example');
     if (!(file_exists($exampleIniFile) && @copy($exampleIniFile, $iniFile))) {
