@@ -9,7 +9,7 @@
 <style>
   .layout {
     margin: 300px auto auto;
-    width: 350px;
+    width: 426px;
   }
   h2 {
     text-align: center;
@@ -20,13 +20,16 @@
   }
   td:not(:nth-last-child(1)) {
     font-weight: bold;
+    width: 130px;
+    display: block;
+    padding: 5px;
   }
 </style>
 <div class="layout">
   <div class="dib-box">
     <table>
       <tr>
-        <td colspan='2'><h2>ZlsPHP Success !</h2></td>
+        <td colspan='2'><h2>Hello world</h2></td>
       </tr>
       <tr>
         <td>Time</td>
@@ -38,11 +41,11 @@
       </tr>
       <tr>
         <td>global</td>
-        <td><?= $global ?></td>
+        <td>runtime: <?= $global['runtime'] ?>, memory: <?= $global['memory'] ?></td>
       </tr>
       <tr>
         <td>part</td>
-        <td><?= $part ?></td>
+        <td>runtime: <?= $part['runtime'] ?>, memory: <?= $part['memory'] ?></td>
       </tr>
       <tr>
         <td>phpversion</td>

@@ -24,8 +24,10 @@ require __DIR__ . '/../vendor/autoload.php';
 Zls::initialize()
     //设置缓存目录,请保证有写入权限
     //->setStorageDirPath(ZLS_APP_PATH . 'storage/')
+    //->addPackages([ZLS_PACKAGES_PATH . 'zlsphp-packages-basis', ZLS_PACKAGES_PATH . 'zlsphp-packages-auth', ZLS_PACKAGES_PATH . 'zlsphp-packages-wechat', ZLS_PACKAGES_PATH . 'zlsphp-packages-swoole', ] )
     //设置指令
     ->setCommands([
+        //'migration' => '\Zls\Migration\Command\Migration',
     ])
     //设置运行环境
     //->setEnvironment(($env = (($cliEnv = \Z::getOpt('env')) ? $cliEnv : \Z::arrayGet($_SERVER, 'ENVIRONMENT'))) ? $env : 'production')
