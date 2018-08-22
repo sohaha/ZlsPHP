@@ -31,7 +31,7 @@ composer create-project --prefer-dist zls/zls xxx #xxx表示项目名
 php zls start
 ```
 
-> 如果想非本机请访问请加上 `-host 0.0.0.0` ，默认端口是 `3780` 如要修改成8080 `-port 8080`。
+> 如果想非本机请访问请加上 `-C` ，默认端口是 `3780` 如要修改成8080 `--port 8080`，更多选项请使用`php zls start -h` 。
 
 看到输出 `HttpServe: http://127.0.0.1:3780` 表示启动成功，打开浏览器输入 http://127.0.0.1:3780
 
@@ -54,4 +54,4 @@ git config core.safecrlf warn
 请给 application/storage 目录可写入权限
 
 
-2018-08-20 11:50:20
+2018-08-22 20:03:48
