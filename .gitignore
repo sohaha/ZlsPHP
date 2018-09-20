@@ -1,9 +1,9 @@
 .idea/
 .vscode/
 vendor/
-application/storage/*
-application/config/production/*
-application/config/development/*
+app/storage/*
+app/config/production/*
+app/config/development/*
 database/mysql/Backup_Command*
 public/admin/
 zls.ini
