@@ -12,6 +12,10 @@ maintainMode = 0
 ; IP白名单
 ipWhitelist[] =
 
+[cache]
+; 缓存类型
+type = "file"
+
 [db]
 ; 数据库端口
 port = 3306

@@ -24,16 +24,13 @@ class Index extends \Zls_Controller
         z::debug('part');
         $data = new \DateTime();
         return [
-            'time'       => $data->format('Y-m-d H:i:s u'),
-            'clientIp'   => z::clientIp(),
-            'host'       => z::host(true, true, true),
-            'part'       => z::debug('part', true, true, false),
-            'global'     => z::debug(null, false, true, false),
-            'phpversion' => phpversion(),
+            'time' => $data->format('Y-m-d H:i:s'),
+            'clientIp' => z::clientIp(),
+            'host' => z::host(true, true, true),
+            'part' => z::debug('part', true, true, false),
+            'global' => z::debug(null, false, true, false),
+            'phpversion' => PHP_VERSION,
         ];
-    }
-    public function zpi()
-    {
     }
     public function call()
     {

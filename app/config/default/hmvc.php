@@ -5,7 +5,7 @@
 $hmvc = z::cacheDate('__hmvc__', function () {
     $hmvc = [];
     $config = z::config();
-    $path = $config->getApplicationDir() . $config->getHmvcDirName() . '/';
+    $path = $config->getAppDir() . $config->getHmvcDirName() . '/';
     if (file_exists($path) && $dh = opendir($path)) {
         while (($file = readdir($dh)) !== false) {
             if ($file != "." && $file != "..") {

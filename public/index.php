@@ -1,13 +1,10 @@
 <?php
 /**
- * Zls.
- *
+ * Zls
  * @author        影浅
  * @email         seekwe@gmail.com
- *
  * @copyright     Copyright (c) 2015 - 2017, 影浅, Inc.
- *
- * @see          ---
+ * @see           https://docs.73zls.com/zls-php/#
  * @since         v1.2.3
  * @updatetime    2017-05-30 21:16:32
  */
@@ -18,7 +15,7 @@ defined('ZLS_RUN_MODE_CLI') || define('ZLS_RUN_MODE_CLI', true);
 // 根目录路径
 defined('ZLS_PATH') || define('ZLS_PATH', __DIR__.'/');
 // 项目目录路径
-defined('ZLS_APP_PATH') || define('ZLS_APP_PATH', ZLS_PATH.'../application/');
+defined('ZLS_APP_PATH') || define('ZLS_APP_PATH', ZLS_PATH.'../app/');
 // 入口文件名称
 defined('ZLS_INDEX_NAME') || define('ZLS_INDEX_NAME', pathinfo(__FILE__, PATHINFO_BASENAME));
 // 引入核心
@@ -54,7 +51,7 @@ Zls::initialize()
     //默认控制器
     //->setDefaultController('Zls')
     //注册hmvc模块
-    ->setHmvcModules(Z::config('hmvc'))
+    //->setHmvcModules(Z::config('hmvc'))
     //设置别名
     //->setAlias([ 'Http' => \Zls\Action\Http::class, ])
     //设置缓存
@@ -64,7 +61,7 @@ Zls::initialize()
     //设置自定义的错误显示控制处理类
     //->setExceptionHandle(new \Exception\Wx())
     //错误日志记录，注释掉这行会关闭日志记录，去掉注释则开启日志文件记录,第一个参数是日志文件路径，第二个参数为是否记录404类型异常
-    ->addLoggerWriter(new \Zls\Logger\FileWriter(ZLS_APP_PATH.'storage/logs/', false, true))
+    ->addLoggerWriter(new \Zls\Logger\FileWriter(ZLS_STORAGE_PATH.'errorLogs/', false, true))
     //设置日志记录子目录格式，参数就是date()函数的第一个参数,默认是 Y-m-d/H */
     //->setLogsSubDirNameFormat('Y-m-d/H')
     //设置session信息

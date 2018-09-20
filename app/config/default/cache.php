@@ -3,7 +3,7 @@
  * 缓存配置
  */
 return [
-    'default_type' => 'file', //默认的缓存类型，值是下面drivers关联数组的键名称。
+    'default_type' => z::config('ini.cache.type',true,'file'), //默认的缓存类型，值是下面drivers关联数组的键名称。
     'drivers'      => [
         //自定义缓存示例
         //'my_cache'      => [
