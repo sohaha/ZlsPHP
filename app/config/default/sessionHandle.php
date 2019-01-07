@@ -37,9 +37,9 @@ return [];
  * auth：字符串，认证密码，避免特殊字符影响可以需要使用urlencode()处理一下
  * database：0 整数，数据库号
  */
-/*
-return new \Zls\Session\Redis(['path' => 'tcp://127.0.0.1:6379?timeout=3&persistent=0']);
-*/
+/**
+ * return new \Zls\Session\Redis(['path' => 'tcp://127.0.0.1:6379?timeout=3&persistent=0']);
+ */
 /**
  * Mongodb托管
  */

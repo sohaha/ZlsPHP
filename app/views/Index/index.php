@@ -47,10 +47,6 @@
                 <td>part</td>
                 <td>runtime: <?= $part['runtime'] ?>, memory: <?= $part['memory'] ?></td>
             </tr>
-            <tr>
-                <td>phpversion</td>
-                <td>php<?= $phpversion ?></td>
-            </tr>
         </table>
     </div>
 </div>

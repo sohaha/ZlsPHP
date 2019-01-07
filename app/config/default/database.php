@@ -110,7 +110,7 @@ return
                 return new PDO($dsn, $username, $password);
             },
             // 修改sql语句
-            'resetSql'    => function ($sql) {
+            'resetSql'    => function (&$sql, &$value, $previewSql) {
                 return $sql;
             },
             'debug'       => $debug,

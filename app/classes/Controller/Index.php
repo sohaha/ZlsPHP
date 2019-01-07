@@ -19,7 +19,7 @@ class Index extends \Zls_Controller
     {
         echo $contents;
     }
-    public function z_index()
+    public function zIndex()
     {
         z::debug('part');
         $data = new \DateTime();
@@ -28,8 +28,7 @@ class Index extends \Zls_Controller
             'clientIp' => z::clientIp(),
             'host' => z::host(true, true, true),
             'part' => z::debug('part', true, true, false),
-            'global' => z::debug(null, false, true, false),
-            'phpversion' => PHP_VERSION,
+            'global' => z::debug(null, false, true, false)
         ];
     }
     public function call()
