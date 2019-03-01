@@ -26,8 +26,7 @@ Zls::initialize()
     // 设置缓存目录
     ->setStorageDirPath(ZLS_STORAGE_PATH)
     // 设置指令
-    ->setCommands([
-    ])
+    ->setCommands([])
     // 设置运行环境
     //->setEnvironment(($env = (($cliEnv = \Z::getOpt('env')) ? $cliEnv : \Z::arrayGet($_SERVER, 'ENVIRONMENT'))) ? $env : 'production')
     // 设置错误级别,也就是error_reporting()的参数,只有此级别的错误才会触发下面的错误显示控制处理类
@@ -64,7 +63,7 @@ Zls::initialize()
     // 设置自定义的错误显示控制处理类
     //->setExceptionHandle(new \Exception\Wx())
     // 错误日志记录，注释掉这行会关闭日志记录，去掉注释则开启日志文件记录,第一个参数是日志文件路径，第二个参数为是否记录404类型异常
-    ->addLoggerWriter(new \Zls\Logger\FileWriter(ZLS_STORAGE_PATH.'errorLogs/', false, true))
+    ->addLoggerWriter(new \Zls\Logger\FileWriter())
     // 设置日志记录子目录格式，参数就是date()函数的第一个参数,默认是 Y-m-d/H */
     //->setLogsSubDirNameFormat('Y-m-d/H')
     // 设置session信息

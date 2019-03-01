@@ -1,6 +1,4 @@
 #!/bin/bash
-# author
-# Treri <https://github.com/Treri>
 
 msg=$(head -n 1 $1)
 
@@ -30,6 +28,7 @@ cat <<EOF
   perf:     提升代码性能
   test:     添加代码测试
   chore:    构建过程或辅助工具和库（如文档生成）的更改
+  misc:     其他
 
 EOF
 echo
