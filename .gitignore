@@ -7,7 +7,7 @@ app/config/development/*
 app/Backup_ArtisanExport*
 public/admin/
 zls.ini
+.DS_Store
 !.gitkeep
 !.gitignore
 !.htaccess
-!.nginx
