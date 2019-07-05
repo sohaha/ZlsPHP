@@ -1,29 +1,44 @@
-
- {
-    "name": "zls/zls",
-    "description": "the zlsphp Framework",
-    "type": "project",
-    "keywords": ["framework","zlsphp","ORM"],
-    "homepage": "https://docs.73zls.com/zls-php/#/",
-    "license": "Apache-2.0",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "authors": [
-        {
-            "name": "小九",
-            "email": "soseek@vip.qq.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-         "ext-pdo": "*",
-         "zls/cache" : ">=1.0.0",
-         "zls/logger": ">=1.0.0",
-         "zls/session": ">=1.0.0",
-         "zls/command": ">=1.0.0",
-         "zls/action": ">=1.0.0",
-         "zls/dao": ">=1.0.0",
-         "zls/framework": ">=1.0.0"
+{
+  "name": "zls/zls",
+  "description": "the zlsphp Framework",
+  "type": "project",
+  "keywords": [
+    "framework",
+    "zlsphp",
+    "ORM"
+  ],
+  "homepage": "https://docs.73zls.com/zls-php/#/",
+  "license": "Apache-2.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "小九",
+      "email": "soseek@vip.qq.com"
     }
+  ],
+  "scripts": {
+    "post-root-package-install": [
+      "@php -r \"file_exists('zls.ini') || copy('zls.ini.example', 'zls.ini');\""
+    ],
+    "post-autoload-dump": [
+      "@php -r \"file_exists('zls.ini') || copy('zls.ini.example', 'zls.ini');\""
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "ext-pdo": "*",
+    "zls/cache": ">=1.0.0",
+    "zls/logger": ">=1.0.0",
+    "zls/session": ">=1.0.0",
+    "zls/command": ">=1.0.0",
+    "zls/action": ">=1.0.0",
+    "zls/dao": ">=1.0.0",
+    "zls/framework": ">=1.0.0"
+  }
 }
-                

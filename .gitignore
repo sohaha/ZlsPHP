@@ -8,6 +8,7 @@ app/Backup_ArtisanExport*
 public/admin/
 zls.ini
 .DS_Store
+.phpunit.result.cache
 !.gitkeep
 !.gitignore
 !.htaccess

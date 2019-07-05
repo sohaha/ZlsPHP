@@ -3,14 +3,14 @@
  * 数据库配置
  * 可以直接在这里修改,也可以修改根目录的zls.ini
  */
-$group = z::config('ini.db.group', true, 'mysql');
-$database = z::config('ini.db.database', true, '');
-$hostname = z::config('ini.db.hostname', true, '');
-$port = z::config('ini.db.port', true, 3306);
-$username = z::config('ini.db.username', true, '');
-$password = z::config('ini.db.password', true, '');
-$debug = z::config('ini.db.debug', true, true);
-$trace = z::config('ini.db.trace', true, false);
+$group       = z::config('ini.db.group', true, 'mysql');
+$database    = z::config('ini.db.database', true, '');
+$hostname    = z::config('ini.db.hostname', true, '');
+$port        = z::config('ini.db.port', true, 3306);
+$username    = z::config('ini.db.username', true, '');
+$password    = z::config('ini.db.password', true, '');
+$debug       = z::config('ini.db.debug', true, true);
+$trace       = z::config('ini.db.trace', true, false);
 $tablePrefix = z::config('ini.db.tablePrefix', true, '');
 return
     [
@@ -106,8 +106,8 @@ return
         'my_db'         => [
             'driverType'  => function () use ($hostname, $database, $username, $password) {
                 $dbms = 'mysql';
-                $dsn = "{$dbms}:host={$hostname};dbname={$database}";
-                return new PDO($dsn, $username, $password);
+                $dsn  = "{$dbms}:host={$hostname};dbname={$database}";
+                return new PDO($dsn, $username, $password, []);
             },
             // 修改sql语句
             'resetSql'    => function (&$sql, &$value, $previewSql) {
