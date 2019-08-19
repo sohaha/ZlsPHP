@@ -33,9 +33,17 @@ php zls start
 php zls -h
 ```
 
+## Git 规范
+
+```bash
+git config core.hooksPath .githook
+git config core.autocrlf input
+git config core.safecrlf warn
+```
+
 ## 注意
 
 请给 app/storage 目录可写入权限
 
 
-2019-07-05 17:16:37
+2019-08-19 16:25:03

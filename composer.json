@@ -31,8 +31,6 @@
     "optimize-autoloader": true
   },
   "require": {
-    "php": ">=5.4.0",
-    "ext-pdo": "*",
     "zls/cache": ">=1.0.0",
     "zls/logger": ">=1.0.0",
     "zls/session": ">=1.0.0",
