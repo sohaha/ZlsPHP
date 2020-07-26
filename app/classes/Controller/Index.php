@@ -1,19 +1,23 @@
 <?php
 namespace Controller;
+
 use Z;
+
 /**
  * Zls
  * @author        影浅 <seekwe@gmail.com>
  */
 class Index extends \Zls_Controller
 {
-    public function before($method, $controllerShort, $args, $controller)
+    public function before($method, $controller, $args, $methodFull, $class)
     {
     }
-    public function after($contents, $methodName, $controllerShort, $args, $controller)
+
+    public function after($contents, $method, $controller, $args, $methodFull, $class)
     {
         return $contents;
     }
+
     public function zIndex()
     {
         z::debug('part');
@@ -26,7 +30,8 @@ class Index extends \Zls_Controller
             'global'   => z::debug(null, false, true, false),
         ];
     }
-    public function call()
+
+    public function call($method, $controller, $args, $methodFull, $class)
     {
         return z::json(404);
     }

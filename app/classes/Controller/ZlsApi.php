@@ -33,6 +33,7 @@ class ZlsApi extends Index
             ],
         ];
     }
+
     /**
      * POST请求入口
      * @time 2019-1-7 13:04:28
@@ -41,6 +42,7 @@ class ZlsApi extends Index
     {
         return [200, 'IS_POST'];
     }
+
     /**
      * 控制器返回数组时，直接输出 json 数据
      * @param $contents
@@ -50,7 +52,7 @@ class ZlsApi extends Index
      * @param $controller
      * @return mixed|string
      */
-    public function after($contents, $methodName, $controllerShort, $args, $controller)
+    public function after($contents, $method, $controller, $args, $methodFull, $class)
     {
         if (is_array($contents)) {
             return Z::json($contents);
