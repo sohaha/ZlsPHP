@@ -1,8 +1,9 @@
 <?php
+
 /**
  * hmvc模块配置
  */
-$hmvc = z::cacheDate('__hmvc__', function () {
+$hmvc = Z::cacheDate('__hmvc__', function () {
     $hmvc = [];
     $config = z::config();
     $path = $config->getAppDir() . $config->getHmvcDirName() . '/';

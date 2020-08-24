@@ -1,17 +1,18 @@
 <?php
+
 /**
  * 数据库配置
  * 可以直接在这里修改,也可以修改根目录的zls.ini
  */
-$group       = z::config('ini.db.group', true, 'mysql');
-$database    = z::config('ini.db.database', true, '');
-$hostname    = z::config('ini.db.hostname', true, '');
-$port        = z::config('ini.db.port', true, 3306);
-$username    = z::config('ini.db.username', true, '');
-$password    = z::config('ini.db.password', true, '');
-$debug       = z::config('ini.db.debug', true, true);
-$trace       = z::config('ini.db.trace', true, false);
-$tablePrefix = z::config('ini.db.tablePrefix', true, '');
+$group       = Z::config('ini.db.group', true, 'mysql');
+$database    = Z::config('ini.db.database', true, '');
+$hostname    = Z::config('ini.db.hostname', true, '');
+$port        = Z::config('ini.db.port', true, 3306);
+$username    = Z::config('ini.db.username', true, '');
+$password    = Z::config('ini.db.password', true, '');
+$debug       = Z::config('ini.db.debug', true, true);
+$trace       = Z::config('ini.db.trace', true, false);
+$tablePrefix = Z::config('ini.db.tablePrefix', true, '');
 return
     [
         // 默认组,组名=>配置
@@ -26,10 +27,10 @@ return
             'database'                 => $database,
             'tablePrefix'              => $tablePrefix,
             'tablePrefixSqlIdentifier' => '_tablePrefix_',
-            'slowQueryDebug'           => false,//开启慢查询记录
+            'slowQueryDebug'           => false, //开启慢查询记录
             'slowQueryTime'            => 3000, //慢查询最小时间,单位毫秒，1秒=1000毫秒
             'slowQueryHandle'          => new \Zls_Database_SlowQuery_Handle_Default(),
-            'indexDebug'               => false,//开启没有满足设置的索引类型的查询记录
+            'indexDebug'               => false, //开启没有满足设置的索引类型的查询记录
             /**
              * 索引使用的最小情况，只有小于最小情况的时候才会记录sql到日志
              * minIndexType值从好到坏依次是:
@@ -65,7 +66,7 @@ return
             'charset'                  => 'utf8',
             'collate'                  => 'utf8_general_ci',
             'database'                 => $database,
-            'timeout'                  => 5,//超时时间
+            'timeout'                  => 5, //超时时间
             'tablePrefix'              => $tablePrefix,
             'tablePrefixSqlIdentifier' => '_tablePrefix_',
             'slowQueryDebug'           => true,
@@ -77,7 +78,7 @@ return
             'masters'                  => [
                 'master01' => [
                     'hostname' => $hostname,
-                    'port'     => $port,// 1433
+                    'port'     => $port, // 1433
                     'username' => $username,
                     'password' => $password,
                 ],
@@ -98,7 +99,7 @@ return
             'tablePrefix'              => $tablePrefix,
             'tablePrefixSqlIdentifier' => '_tablePrefix_',
             'database'                 => $database, //sqlite3数据库路径
-            'slowQueryDebug'           => true,//是否开启慢查询记录
+            'slowQueryDebug'           => true, //是否开启慢查询记录
             'slowQueryTime'            => 3000, //单位毫秒，1秒=1000毫秒
             'slowQueryHandle'          => new \Zls_Database_SlowQuery_Handle_Default(),
         ],
