@@ -6,7 +6,7 @@
 [base]
 name = "zls"
 ; 调试模式
-debug = 1
+debug = 0
 ; 维护模式
 maintainMode = 0
 ; IP白名单
