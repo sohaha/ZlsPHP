@@ -3,10 +3,7 @@
  * Zls
  * @author        影浅
  * @email         seekwe@gmail.com
- * @copyright     Copyright (c) 2015 - 2017, 影浅, Inc.
  * @see           https://docs.73zls.com/zls-php/#
- * @since         v2.3.12
- * @updatetime    2020-10-28 16:10:00
  */
 // 关闭插件模式
 defined('ZLS_RUN_MODE_PLUGIN') || define('ZLS_RUN_MODE_PLUGIN', false);
@@ -21,7 +18,7 @@ defined('ZLS_INDEX_NAME') || define('ZLS_INDEX_NAME', pathinfo(__FILE__, PATHINF
 // 引入核心
 require __DIR__ . '/../vendor/autoload.php';
 // 缓存目录,请保证有写入权限
-defined('ZLS_STORAGE_PATH') || define('ZLS_STORAGE_PATH', ZLS_APP_PATH . 'storage/');
+defined('ZLS_STORAGE_PATH') || define('ZLS_STORAGE_PATH', ZLS_APP_PATH . '../storage/');
 Zls::initialize()
 // 设置缓存目录
 	->setStorageDirPath(ZLS_STORAGE_PATH)
