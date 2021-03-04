@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 vendor/
+storage/
 app/storage/*
 app/config/production/*
 app/config/development/*
