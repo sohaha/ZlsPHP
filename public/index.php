@@ -33,7 +33,7 @@ Zls::initialize()
 // 日志处理
 //->setTraceStatusCallBack(function ($log,$type){})
 // 设置自动Api文档访问toekn
-	->setApiDocToken('zls')
+	->setApiDocToken('')
 // 设置URL后缀
 	->setMethodUriSubfix('.go')
 // 维护模式
