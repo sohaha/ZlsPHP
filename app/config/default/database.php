@@ -98,7 +98,7 @@ return
             'pconnect'                 => false,
             'tablePrefix'              => $tablePrefix,
             'tablePrefixSqlIdentifier' => '_tablePrefix_',
-            'database'                 => $database, //sqlite3数据库路径
+            'database'                 => Z::realPath($database), //sqlite3数据库路径
             'slowQueryDebug'           => true, //是否开启慢查询记录
             'slowQueryTime'            => 3000, //单位毫秒，1秒=1000毫秒
             'slowQueryHandle'          => new \Zls_Database_SlowQuery_Handle_Default(),
